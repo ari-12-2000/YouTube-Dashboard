@@ -5,11 +5,22 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../lib/generated/prisma"
+  binaryTargets = ["native", "windows", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Note {
+id String @id @default(cuid())
+videoId String
+title String
+body String
+tags String[] @default([])
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
