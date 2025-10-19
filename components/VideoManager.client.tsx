@@ -1,7 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
 
 type Video = any;
 
