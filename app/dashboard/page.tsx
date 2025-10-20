@@ -1,5 +1,4 @@
 'use client'
-import { fetchVideo } from '@/lib/youtube';
 import VideoManager from '@/components/VideoManager.client';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
