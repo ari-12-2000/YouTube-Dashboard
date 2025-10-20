@@ -1,22 +1,24 @@
 import { google } from 'googleapis';
 import type { OAuth2Client } from 'google-auth-library';
+import { getServerSession } from 'next-auth';
 
 
-function getOAuthClient(): OAuth2Client {
+async function getOAuthClient(): Promise<OAuth2Client> {
+    const session= await getServerSession()
     const client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/youtube/callback`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/google`
     );
-    if (process.env.GOOGLE_REFRESH_TOKEN) {
-        client.setCredentials({ refresh_token: process.env.GOOGLE_REFRESH_TOKEN });
-    }
+    
+    client.setCredentials({ refresh_token: session?.refreshToken });
+    
     return client;
 }
 
 
 export async function getYoutubeClient() {
-    const auth = getOAuthClient();
+    const auth = await getOAuthClient();
     const youtube = google.youtube({ version: 'v3', auth });
     return { youtube, auth };
 }

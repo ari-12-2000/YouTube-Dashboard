@@ -9,6 +9,8 @@ const handler = NextAuth({
       authorization: {
         params: {
           scope: "openid email profile https://www.googleapis.com/auth/youtube.force-ssl",
+          access_type: "offline",
+          prompt: "consent",
         },
       },
     }),
@@ -17,12 +19,15 @@ const handler = NextAuth({
     async jwt({ token, account }) {
       if (account) {
         token.accessToken = account.access_token
-        token.refreshToken = account.refresh_token
+        if (account.refresh_token) {
+          token.refreshToken = account.refresh_token
+        }
       }
       return token
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string
+      session.refreshToken = token.refreshToken as string
       return session
     },
   },
