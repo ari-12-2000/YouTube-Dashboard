@@ -14,7 +14,7 @@ export default function Page() {
         if (!session) return; // wait till login
         const loadVideo = async () => {
             try {
-                const data = await fetchVideo(videoId!);
+                const data = await fetch(`/api/youtube/${video.id}`);
                 setVideo(data);
             } catch (err) {
                 console.error("Error fetching video:", err);

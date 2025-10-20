@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { fetchVideo, updateVideoMetadata, listComments, insertComment, insertReply, deleteComment } from '@/lib/youtube';
 
-
 export async function POST(req: Request) {
     const url = new URL(req.url);
     const body = await req.json().catch(() => ({}));
