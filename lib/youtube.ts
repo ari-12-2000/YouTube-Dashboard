@@ -1,10 +1,11 @@
 import { google } from 'googleapis';
 import type { OAuth2Client } from 'google-auth-library';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 
 async function getOAuthClient(): Promise<OAuth2Client> {
-    const session= await getServerSession()
+    const session= await getServerSession(authOptions)
     const client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
