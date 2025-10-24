@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 type Video = any;
 
 export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
-  const videoId = serverVideo?.id;
+  const videoId:string = serverVideo?.id;
   const [video, setVideo] = useState(serverVideo);
   const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState('');

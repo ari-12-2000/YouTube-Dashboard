@@ -17,6 +17,7 @@ function VideoDashboard() {
       try {
         const res = await fetch(`/api/youtube/${videoId}`)
         const data = await res.json()
+        console.log(data);
         if (!res.ok) throw new Error(data.error)
         setVideo(data)
       } catch (err) {
