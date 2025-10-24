@@ -76,6 +76,7 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
   // Notes handling
   async function saveNote() {
     const tagsArray = noteTags.split(',').map(t => t.trim()).filter(Boolean);
+    console.log(tagsArray);
     const res = await fetch('/api/notes', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ videoId, title: noteTitle, body: noteBody, tags: tagsArray }) });
     const j = await res.json();
     if (j.id) {
