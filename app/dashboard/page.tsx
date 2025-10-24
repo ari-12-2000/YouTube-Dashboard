@@ -27,7 +27,7 @@ function VideoDashboard() {
   }, [session, videoId])
 
   return (
-    <main className="max-w-4xl mx-auto">
+    <main className="max-w-4xl mx-auto min-h-screen flex justify-center items-center">
       <h1 className="text-2xl font-bold mb-4">YouTube Mini Dashboard</h1>
 
       {!video && (
