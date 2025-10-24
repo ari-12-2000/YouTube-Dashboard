@@ -23,6 +23,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const body = await req.json();
   const { videoId, title, body: content, tags } = body;
+  console.log(videoId, title, content, tags)
   const created = await prisma.note.create({ data: { videoId, title, body: content, tags } });
   return NextResponse.json(created);
 }
