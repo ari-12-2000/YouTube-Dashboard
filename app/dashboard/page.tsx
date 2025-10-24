@@ -19,7 +19,7 @@ function VideoDashboard() {
         const data = await res.json()
         console.log(data);
         if (!res.ok) throw new Error(data.error)
-        setVideo(data)
+        setVideo(data.video)
       } catch (err) {
         console.error('Error fetching video:', err)
       }
