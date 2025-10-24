@@ -78,6 +78,7 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
     const tagsArray = noteTags.split(',').map(t => t.trim()).filter(Boolean);
     console.log(noteTitle, noteBody);
     const res = await fetch('/api/notes', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ videoId, title: noteTitle, body: noteBody, tags: tagsArray }) });
+    console.log(res);
     const j = await res.json();
     if (j.id) {
       setNotes(prev => [j, ...prev]);
