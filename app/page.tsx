@@ -84,9 +84,9 @@ export default function Home() {
                       placeholder="e.g. dQw4w9WgXcQ"
                       className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 bg-slate-50 hover:bg-white"
                     />
-                    <Play className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Play className="w-5 h-5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
                   </div>
-                  <p className="text-xs text-slate-500 mt-2">Enter the video ID from the YouTube URL</p>
+                  <p className="text-xs mt-2">Enter the video ID from the YouTube URL</p>
                 </div>
                 <button
                   type="submit"
