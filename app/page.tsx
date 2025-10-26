@@ -53,7 +53,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="space-y-4 animate-slide-up">
-            <div className="bg-white rounded-2xl shadow-xl p-6 border border-slate-200 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl shadow-xl p-6 border border-slate-200">
               <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
                   {session.user?.name?.charAt(0)}
