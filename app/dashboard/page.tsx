@@ -65,7 +65,7 @@ function VideoDashboard() {
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-7xl mx-auto px-6 py-8 text-black">
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />

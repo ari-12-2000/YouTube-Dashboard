@@ -71,7 +71,7 @@ export default function Home() {
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4 text-black">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     YouTube Video ID
