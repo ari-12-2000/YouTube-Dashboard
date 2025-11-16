@@ -35,6 +35,7 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
       alert('Updated');
       setVideo(j.updated);
       setEditing(false);
+      await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"UPDATE_METADATA" }) });
     } else alert('Error: ' + j.error);
   }
 
@@ -48,6 +49,8 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
       const l = await fetch('/api/youtube', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ action: 'comments/list', videoId }) });
       const lj = await l.json();
       if (lj.ok) setComments(lj.items || []);
+      if (lj.ok)
+      await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"ADD_COMMENT" }) });
     } else alert('Error: ' + j.error);
   }
 
@@ -61,7 +64,9 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
       const l = await fetch('/api/youtube', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ action: 'comments/list', videoId }) });
       const lj = await l.json();
       if (lj.ok) setComments(lj.items || []);
+      await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"REPLY_COMMENT" }) });
     } else alert('Error: ' + j.error);
+    
   }
 
   async function deleteCommentById(id: string) {
@@ -71,7 +76,10 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
     if (j.ok) {
       setComments(prev => prev.filter(c => c.id !== id));
       alert('Deleted');
+      await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"DELETE_COMMENT" }) });
     } else alert('Error: ' + j.error);
+    
+  
   }
 
   // Notes handling
@@ -82,13 +90,19 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
     if (j.id) {
       setNotes(prev => [j, ...prev]);
       setNoteTitle(''); setNoteBody(''); setNoteTags('');
+      await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"ADD_NOTE" }) });
     }
+
+    
   }
 
   async function searchNotes(q: string) {
     const res = await fetch('/api/notes?videoId=' + videoId + '&q=' + encodeURIComponent(q));
     const j = await res.json();
     setNotes(j || []);
+    if(j)
+    await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"SEARCH_NOTE" }) });
+  
   }
 
   return (

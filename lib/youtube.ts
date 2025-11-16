@@ -104,3 +104,4 @@ export async function deleteComment(commentId: string) {
     await youtube.comments.delete({ id: commentId });
     return { ok: true };
 }
+

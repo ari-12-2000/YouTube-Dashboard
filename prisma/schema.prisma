@@ -26,6 +26,9 @@ updatedAt DateTime @updatedAt
 }
 
 model Logs {
-  id String @id @default(cuid())
-  Event String
+  id           String @id @default(cuid())
+  action     String                      // what happened (VIEW_VIDEO, ADD_COMMENT, DELETE_COMMENT, etc.)
+  resourceId String                     // e.g., videoId, commentId, noteId
+  createdAt  DateTime @default(now())    // timestamp
 }
+
