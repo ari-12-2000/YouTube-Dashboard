@@ -59,7 +59,7 @@ function VideoDashboard() {
             {video && (
               <div className="flex items-center gap-2 text-slate-600">
                 <Eye className="w-4 h-4" />
-                <span className="text-sm font-medium">{formatNumber(video.statistics?.viewCount)} views</span>
+                <span className="text-sm flex font-medium">{formatNumber(video.statistics?.viewCount)} views</span>
               </div>
             )}
           </div>
