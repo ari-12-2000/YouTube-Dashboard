@@ -86,7 +86,7 @@ export default function Home() {
                     />
                     <Play className="w-5 h-5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
                   </div>
-                  <p className="text-xs mt-2">Enter the video ID from the YouTube URL</p>
+                  <p className="text-xs mt-2">Enter the video ID from your YouTube video URL</p>
                 </div>
                 <button
                   type="submit"

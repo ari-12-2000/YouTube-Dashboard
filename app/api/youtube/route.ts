@@ -11,7 +11,7 @@ import {
 export async function POST(req: Request) {
   try {
     const url = new URL(req.url);
-    const body = await req.json(); // if this fails, the outer catch will handle it
+    const body = await req.json(); 
     const action = body.action || body.type || url.searchParams.get('action');
 
     if (action === 'fetch') {
@@ -62,6 +62,8 @@ export async function POST(req: Request) {
 
   } catch (err: any) {
     console.error('API error:', err);
+    if(err.status===403)
+      return NextResponse.json({ ok: false, error: 'Your requested action is against youtube guidelines' }, { status: 500 });
     return NextResponse.json({ ok: false, error: err.message || 'Something went wrong' }, { status: 500 });
   }
 }
