@@ -5,9 +5,9 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { userName, action, resourceId } = body;
+    const { action, resourceId } = body;
 
-    if (!userName || !action || !resourceId) {
+    if (!action || !resourceId) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
