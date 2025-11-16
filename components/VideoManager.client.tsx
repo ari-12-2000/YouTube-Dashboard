@@ -5,7 +5,7 @@ import { Edit2, Save, X, Send, MessageCircle, Trash2, Reply, StickyNote, Search,
 type Video = any;
 
 export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
-  const videoId:string = serverVideo?.id;
+  const videoId: string = serverVideo?.id;
   const [video, setVideo] = useState(serverVideo);
   const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState('');
@@ -21,7 +21,7 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
   const [noteTags, setNoteTags] = useState('');
 
   useEffect(() => {
-    fetch('/api/youtube', { method: 'POST', body: JSON.stringify({ action: 'comments/list', videoId }) , headers:{'content-type':'application/json'} })
+    fetch('/api/youtube', { method: 'POST', body: JSON.stringify({ action: 'comments/list', videoId }), headers: { 'content-type': 'application/json' } })
       .then(r => r.json())
       .then(d => { if (d.ok) setComments(d.items || []); });
 
@@ -29,80 +29,80 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
   }, [videoId]);
 
   async function updateMeta() {
-    const res = await fetch('/api/youtube', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ action: 'update', videoId, title, description }) });
+    const res = await fetch('/api/youtube', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'update', videoId, title, description }) });
     const j = await res.json();
     if (j.ok) {
       alert('Updated');
       setVideo(j.updated);
       setEditing(false);
-      await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"UPDATE_METADATA" }) });
+      await fetch('/api/logs', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ resourceId: videoId, action: "UPDATE_METADATA" }) });
     } else alert('Error: ' + j.error);
   }
 
   async function postComment() {
     if (!newComment.trim()) return;
-    const res = await fetch('/api/youtube', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ action: 'comments/insert', videoId, text: newComment }) });
+    const res = await fetch('/api/youtube', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'comments/insert', videoId, text: newComment }) });
     const j = await res.json();
     if (j.ok) {
       setNewComment('');
       // refresh
-      const l = await fetch('/api/youtube', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ action: 'comments/list', videoId }) });
+      const l = await fetch('/api/youtube', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'comments/list', videoId }) });
       const lj = await l.json();
       if (lj.ok) setComments(lj.items || []);
       if (lj.ok)
-      await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"ADD_COMMENT" }) });
+        await fetch('/api/logs', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ resourceId: videoId, action: "ADD_COMMENT" }) });
     } else alert('Error: ' + j.error);
   }
 
   async function replyTo(parentId: string) {
     const text = prompt('Reply text');
     if (!text) return;
-    const res = await fetch('/api/youtube', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ action: 'comments/reply', parentId, text }) });
+    const res = await fetch('/api/youtube', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'comments/reply', parentId, text }) });
     const j = await res.json();
     if (j.ok) {
       alert('replied');
-      const l = await fetch('/api/youtube', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ action: 'comments/list', videoId }) });
+      const l = await fetch('/api/youtube', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'comments/list', videoId }) });
       const lj = await l.json();
       if (lj.ok) setComments(lj.items || []);
-      await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"REPLY_COMMENT" }) });
+      await fetch('/api/logs', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ resourceId: videoId, action: "REPLY_COMMENT" }) });
     } else alert('Error: ' + j.error);
-    
+
   }
 
   async function deleteCommentById(id: string) {
     if (!confirm('Delete this comment?')) return;
-    const res = await fetch('/api/youtube', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ action: 'comments/delete', commentId: id }) });
+    const res = await fetch('/api/youtube', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'comments/delete', commentId: id }) });
     const j = await res.json();
     if (j.ok) {
       setComments(prev => prev.filter(c => c.id !== id));
       alert('Deleted');
-      await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"DELETE_COMMENT" }) });
+      await fetch('/api/logs', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ resourceId: videoId, action: "DELETE_COMMENT" }) });
     } else alert('Error: ' + j.error);
-    
-  
+
+
   }
 
   // Notes handling
   async function saveNote() {
     const tagsArray = noteTags.split(',').map(t => t.trim()).filter(Boolean);
-    const res = await fetch('/api/notes', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ videoId, title: noteTitle, body: noteBody, tags: tagsArray }) });
+    const res = await fetch('/api/notes', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ videoId, title: noteTitle, body: noteBody, tags: tagsArray }) });
     const j = await res.json();
     if (j.id) {
       setNotes(prev => [j, ...prev]);
       setNoteTitle(''); setNoteBody(''); setNoteTags('');
-      await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"ADD_NOTE" }) });
+      await fetch('/api/logs', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ resourceId: videoId, action: "ADD_NOTE" }) });
     }
 
-    
+
   }
 
   async function searchNotes(q: string) {
     const res = await fetch('/api/notes?videoId=' + videoId + '&q=' + encodeURIComponent(q));
     const j = await res.json();
     setNotes(j || []);
-    if(j)
-    await fetch('/api/logs', { method: 'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ resourceId:videoId, action:"SEARCH_NOTE" }) });
-  
+    if (j)
+      await fetch('/api/logs', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ resourceId: videoId, action: "SEARCH_NOTE" }) });
+
   }
 
   return (
@@ -173,7 +173,7 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
           <div className="space-y-3">
             <textarea
               value={newComment}
-              onChange={e=>setNewComment(e.target.value)}
+              onChange={e => setNewComment(e.target.value)}
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all resize-none"
               rows={3}
               placeholder="Write a comment..."
@@ -202,7 +202,7 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
                 <p className="text-sm">No comments yet</p>
               </div>
             )}
-            {comments.map((c:any) => {
+            {comments.map((c: any) => {
               const top = c.snippet?.topLevelComment || c;
               const id = top.id || c.id;
               return (
@@ -230,7 +230,7 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
                           Delete
                         </button>
                       </div>
-                      {c.replies?.comments?.map((r:any)=> (
+                      {c.replies?.comments?.map((r: any) => (
                         <div key={r.id} className="ml-4 mt-3 pl-4 border-l-2 border-purple-200 text-sm text-slate-600">
                           {r.snippet?.textDisplay}
                         </div>
@@ -257,7 +257,7 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
             <input
               placeholder="Search notes or tags"
               value={noteQuery}
-              onChange={e=>{setNoteQuery(e.target.value); searchNotes(e.target.value)}}
+              onChange={e => { setNoteQuery(e.target.value); searchNotes(e.target.value) }}
               className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all"
             />
           </div>
@@ -267,13 +267,13 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
               <input
                 placeholder="Note title"
                 value={noteTitle}
-                onChange={e=>setNoteTitle(e.target.value)}
+                onChange={e => setNoteTitle(e.target.value)}
                 className="w-full border border-amber-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all bg-white"
               />
               <textarea
                 placeholder="Write your note..."
                 value={noteBody}
-                onChange={e=>setNoteBody(e.target.value)}
+                onChange={e => setNoteBody(e.target.value)}
                 className="w-full border border-amber-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all resize-none bg-white"
                 rows={3}
               />
@@ -282,7 +282,7 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
                 <input
                   placeholder="tags (comma separated)"
                   value={noteTags}
-                  onChange={e=>setNoteTags(e.target.value)}
+                  onChange={e => setNoteTags(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-amber-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all bg-white"
                 />
               </div>
@@ -303,12 +303,12 @@ export default function VideoManager({ serverVideo }: { serverVideo: Video }) {
                 <p className="text-sm">No notes yet</p>
               </div>
             )}
-            {notes.map((n:any) => (
+            {notes.map((n: any) => (
               <div key={n.id} className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg p-4 border border-amber-200 hover:border-amber-300 transition-colors">
                 <div className="font-semibold text-slate-800 mb-1">{n.title}</div>
                 {n.tags && n.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-2">
-                    {n.tags.map((tag:string, idx:number) => (
+                    {n.tags.map((tag: string, idx: number) => (
                       <span key={idx} className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-200 text-amber-800 rounded-full text-xs font-medium">
                         <Tag className="w-3 h-3" />
                         {tag}
