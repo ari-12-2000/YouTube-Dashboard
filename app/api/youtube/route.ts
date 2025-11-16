@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     const action = body.action || body.type || url.searchParams.get('action');
 
     if (action === 'fetch') {
-      const videoId = body.videoId || process.env.YOUTUBE_VIDEO_ID!;
+      const videoId = body.videoId;
       const video = await fetchVideo(videoId);
       return NextResponse.json({ ok: true, video });
     }
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     if (action === 'update') {
       const { videoId, title, description } = body;
       const updated = await updateVideoMetadata(
-        videoId || process.env.YOUTUBE_VIDEO_ID!,
+        videoId,
         title,
         description
       );
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     }
 
     if (action === 'comments/list') {
-      const videoId = body.videoId || process.env.YOUTUBE_VIDEO_ID!;
+      const videoId = body.videoId;
       const items = await listComments(videoId);
       return NextResponse.json({ ok: true, items });
     }
