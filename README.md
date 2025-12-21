@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+ROUTES
 
-## Getting Started
+1. POST /api/youtube
 
-First, run the development server:
+Handles YouTube operations like fetching video info, updating metadata, and managing comments.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. GET /api/youtube/[videoId]
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Fetches full YouTube video details directly using the dynamic video ID.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. GET /api/notes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Returns notes for a specific video, with built-in text and tag search.
 
-## Learn More
+4. POST /api/notes
 
-To learn more about Next.js, take a look at the following resources:
+Creates a new note with title, body, and tags for a selected video.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. POST /api/logs
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Stores user actions such as edits, comments, and note activity for auditing.
 
-## Deploy on Vercel
+PRISMA MODELS 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1.Note 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Stores user-created notes linked to a specific video, along with tags and timestamps.
+
+model Note {
+id String @id @default(cuid())
+videoId String
+title String
+body String
+tags String[] @default([])
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+}
+
+2.Logs 
+
+Keeps a history of important user actions such as comments, edits, or notes for auditing and tracking.
+
+model Logs {
+  id           String @id @default(cuid())
+  action     String                      (what happened (VIEW_VIDEO, ADD_COMMENT, DELETE_COMMENT, etc.)
+  resourceId String                     ( e.g., videoId, commentId, noteId )
+  createdAt  DateTime @default(now())    ( timestamp )
+}
