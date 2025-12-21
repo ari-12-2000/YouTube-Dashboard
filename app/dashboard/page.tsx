@@ -1,37 +1,47 @@
 'use client'
 
-import VideoManager from '@/components/VideoManager.client'
-import { useSession } from 'next-auth/react'
-import { useEffect, useState, Suspense } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Eye, ArrowLeft, Loader2 } from 'lucide-react'
+import { ArrowLeft, Eye, Loader2 } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import VideoManager from '@/components/VideoManager.client'
 
-function VideoDashboard() {
+export default function Page() {
   const searchParams = useSearchParams()
   const videoId = searchParams.get('videoId')
+
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex items-center justify-center">
+          <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+        </div>
+      }
+    >
+      <VideoDashboard videoId={videoId} />
+    </Suspense>
+  )
+}
+
+function VideoDashboard({ videoId }: { videoId: string | null }) {
   const { data: session } = useSession()
   const [video, setVideo] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-
   useEffect(() => {
     if (!session) return
     const loadVideo = async () => {
       try {
         setLoading(true)
         const res = await fetch(`/api/youtube/${videoId}`)
-        const data = await res.json()
+        const data = await res.json();
         console.log(data);
-        if (!res.ok) throw new Error(data.error)
+        if (!res.ok)
+          throw new Error(data.error)
         setVideo(data.video)
-      } catch (err) {
-        console.error('Error fetching video:', err)
-      } finally {
-        setLoading(false)
-      }
+      } catch (err) { console.error('Error fetching video:', err) } finally { setLoading(false) }
     }
     loadVideo()
   }, [session, videoId])
-
   const formatNumber = (num: string | number) => {
     if (!num) return '0'
     const n = typeof num === 'string' ? parseInt(num) : num
@@ -161,16 +171,5 @@ function VideoDashboard() {
   )
 }
 
-export default function Page() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
-        </div>
-      </div>
-    }>
-      <VideoDashboard />
-    </Suspense>
-  )
-}
+
+
